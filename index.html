@@ -45,9 +45,9 @@
             padding: 15px; 
             max-width: 800px; 
             margin: auto;
-            overflow-y: visible;
         }
         
+        /* CORREÇÃO DAS TELAS */
         .screen { display: none; }
         .screen.active { display: block; }
 
@@ -60,15 +60,13 @@
             border-left: 6px solid var(--safety-blue); 
             position: relative; 
         }
-        
-        #tela1 .card { margin-bottom: 250px; }
 
         h3 { margin-top: 0; color: var(--safety-blue); border-bottom: 1px solid #eee; padding-bottom: 8px; font-weight: 800; }
 
         label { display: block; margin-top: 10px; font-weight: bold; font-size: 13px; color: #444; }
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; margin-top: 5px; box-sizing: border-box; font-size: 16px; }
-        .btn-main { background: var(--safety-blue); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; margin-top: 15px; cursor: pointer; transition: 0.3s; }
-        .btn-main:active { transform: scale(0.98); }
+        
+        .btn-main { background: var(--safety-blue); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 16px; font-weight: bold; margin-top: 15px; cursor: pointer; }
         .btn-secondary { background: #6c757d; color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; font-size: 14px; margin-top: 10px; cursor: pointer; }
 
         .badge { padding: 5px 10px; border-radius: 6px; color: white; font-size: 12px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
@@ -77,20 +75,13 @@
         .medium { background: var(--warning-orange); } 
         .low { background: var(--success-green); }
 
-        .btn-delete { position: absolute; top: 15px; right: 15px; background: #fff1f1; border: none; color: var(--danger-red); font-size: 20px; cursor: pointer; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .btn-delete { position: absolute; top: 15px; right: 15px; background: #fff1f1; border: none; color: var(--danger-red); font-size: 20px; cursor: pointer; border-radius: 50%; width: 35px; height: 35px; }
 
-        .alert-pendente { color: var(--danger-red); border: 2px dashed var(--danger-red); padding: 8px; text-align: center; font-weight: 900; margin: 10px 0; border-radius: 8px; }
-        
-        /* CORES VIVAS PARA O REPORT */
-        .txt-tecnico { color: #555; font-weight: 700; font-size: 14px; margin-bottom: 5px; }
-        .txt-blue { color: var(--vibrant-blue); font-weight: 800; font-size: 16px; margin: 8px 0; display: block; }
-        .txt-green { color: var(--vibrant-green); font-weight: 800; font-size: 16px; margin: 8px 0; display: block; }
+        .txt-blue { color: var(--vibrant-blue); font-weight: 800; }
+        .txt-green { color: var(--vibrant-green); font-weight: 800; }
         .tag-info { background: #eef2f7; padding: 4px 8px; border-radius: 5px; font-weight: 900; color: var(--safety-blue); }
         
-        hr { border: 0; border-top: 1px solid #eee; margin: 12px 0; }
-        
-        .btn-action { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; color: white; margin-right: 5px; }
-        .time-header { background: #e9ecef; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; color: var(--safety-blue); font-weight: 900; font-size: 18px; border-left: 5px solid var(--safety-blue); }
+        .time-header { background: #e9ecef; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; color: var(--safety-blue); font-weight: 900; border-left: 5px solid var(--safety-blue); }
 
         .modal-overlay {
             display: none;
@@ -98,17 +89,9 @@
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7);
             z-index: 1000;
-            align-items: center;
-            justify-content: center;
+            align-items: center; justify-content: center;
         }
-        .modal-content {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
+        .modal-content { background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 400px; }
     </style>
 </head>
 <body>
@@ -123,21 +106,18 @@
     <button onclick="changeScreen('tela2')" id="nav-tela2">Análise</button>
     <button onclick="changeScreen('tela3')" id="nav-tela3">Plano de Ação</button>
     <button onclick="changeScreen('tela4')" id="nav-tela4">Indicadores</button>
-    <button onclick="changeScreen('tela5')" id="nav-tela5">Histórico</button>
     <button onclick="changeScreen('tela6')" id="nav-tela6">Report Time</button>
     <button onclick="changeScreen('tela7')" id="nav-tela7">Backup</button>
 </nav>
 
 <div id="modalRepro" class="modal-overlay">
     <div class="modal-content">
-        <h3 style="border:none">Reprogramar Prazo</h3>
-        <p id="repro-tag-info" style="font-size:14px; color:#666"></p>
+        <h3>Reprogramar Prazo</h3>
+        <p id="repro-tag-info"></p>
         <label>Nova Data</label>
         <input type="date" id="new-repro-date">
-        <div style="display:flex; gap:10px; margin-top:20px;">
-            <button class="btn-secondary" style="margin:0" onclick="closeReproModal()">CANCELAR</button>
-            <button class="btn-main" style="margin:0; background:var(--warning-orange)" onclick="confirmarReprogramacao()">ATUALIZAR</button>
-        </div>
+        <button class="btn-main" onclick="confirmarReprogramacao()">ATUALIZAR</button>
+        <button class="btn-secondary" onclick="closeReproModal()">CANCELAR</button>
     </div>
 </div>
 
@@ -146,18 +126,22 @@
         <div class="card">
             <h3>Entrada de Manutenção</h3>
             <label>Data</label><input type="date" id="f-data">
-            <label>Técnico</label><input type="text" id="f-tecnico" placeholder="Nome do técnico responsável">
-            <label>TAG</label>
-            <input type="text" id="f-tag" list="lista-tags-sugeridas" placeholder="Ex: FKL 6">
-            <datalist id="lista-tags-sugeridas"></datalist>
+            <label>Técnico</label><input type="text" id="f-tecnico" placeholder="Nome do técnico">
+            <label>TAG</label><input type="text" id="f-tag" list="lista-tags" placeholder="Ex: FKL 6">
+            <datalist id="lista-tags"></datalist>
             
-            <label>Time</label><select id="f-time"><option>Time 1</option><option>Time 2</option><option>Time 3</option></select>
+            <label>Time</label>
+            <select id="f-time">
+                <option>Time 1</option><option>Time 2</option><option>Time 3</option>
+            </select>
+            
             <label>Setor</label>
             <select id="f-setor">
                 <option>Mecânica</option><option>Hidráulica</option><option>Pneumática</option>
                 <option>Elétrica</option><option>Robótica</option><option>Processo</option>
-                <option>Engenharia</option><option>Operacional</option>
+                <option>Operacional</option>
             </select>
+            
             <label>Ocorrência</label><textarea id="f-falha" rows="3"></textarea>
             <label>Ação Tomada</label><textarea id="f-acao" rows="3"></textarea>
             <button class="btn-main" onclick="salvarRegistro()">SALVAR REGISTRO</button>
@@ -181,24 +165,21 @@
     <section id="tela4" class="screen">
         <div class="card">
             <h3>Falhas por Setor (%)</h3>
-            <div style="position: relative; height:300px; width:100%"><canvas id="graficoSetores"></canvas></div>
+            <div style="height:300px;"><canvas id="graficoSetores"></canvas></div>
         </div>
     </section>
 
-    <section id="tela5" class="screen"><div id="historico-concluidos"></div></section>
-
     <section id="tela6" class="screen">
-        <div class="card"><input type="text" id="search-report" onkeyup="renderReport()" placeholder="Pesquisar TAG, Técnico ou Data..."></div>
+        <div class="card"><input type="text" id="search-report" onkeyup="renderReport()" placeholder="Pesquisar..."></div>
         <div id="report-lista"></div>
     </section>
 
     <section id="tela7" class="screen">
         <div class="card">
-            <h3>Gerenciar Banco de Dados</h3>
-            <p>Use as opções abaixo para salvar um backup ou restaurar dados de outro dispositivo.</p>
-            <button class="btn-main" onclick="exportarDados()">EXPORTAR BANCO (.JSON)</button>
+            <h3>Banco de Dados</h3>
+            <button class="btn-main" onclick="exportarDados()">EXPORTAR BACKUP (.JSON)</button>
             <hr>
-            <label>Importar Banco de Dados</label>
+            <label>Importar Backup</label>
             <input type="file" id="importFile" accept=".json">
             <button class="btn-secondary" onclick="importarDados()">IMPORTAR ARQUIVO</button>
         </div>
@@ -206,25 +187,17 @@
 </div>
 
 <script>
+    // INICIALIZAÇÃO DE DADOS
     let db = JSON.parse(localStorage.getItem('fmx_db')) || [];
     let planos = JSON.parse(localStorage.getItem('fmx_planos')) || {};
     let chartFmx = null;
     let currentReproId = null;
 
-    function salvarLocal() {
-        localStorage.setItem('fmx_db', JSON.stringify(db));
-        localStorage.setItem('fmx_planos', JSON.stringify(planos));
-        atualizarDatalist();
-    }
-
-    function atualizarDatalist() {
-        const datalist = document.getElementById('lista-tags-sugeridas');
-        const tagsUnicas = [...new Set(db.map(i => i.tag))].sort();
-        datalist.innerHTML = tagsUnicas.map(t => `<option value="${t}">`).join('');
-    }
-
+    // NAVEGAÇÃO
     function changeScreen(id) {
-        document.querySelectorAll('.screen, nav button').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        
         document.getElementById(id).classList.add('active');
         document.getElementById('nav-' + id).classList.add('active');
         
@@ -232,186 +205,110 @@
         if(id === 'tela2') renderAnalise();
         if(id === 'tela3') renderPlanos();
         if(id === 'tela4') renderGrafico();
-        if(id === 'tela5') renderHistorico();
         if(id === 'tela6') renderReport();
-        
         window.scrollTo(0,0);
     }
 
+    function salvarLocal() {
+        localStorage.setItem('fmx_db', JSON.stringify(db));
+        localStorage.setItem('fmx_planos', JSON.stringify(planos));
+    }
+
     function salvarRegistro() {
-        const tecnico = document.getElementById('f-tecnico').value.trim();
-        const tag = document.getElementById('f-tag').value.trim();
-        const falha = document.getElementById('f-falha').value.trim();
-        const acao = document.getElementById('f-acao').value.trim();
-        
-        if(!tag || !falha) { alert("ERRO: A TAG e a Ocorrência são obrigatórios!"); return; }
-
-        const e = { 
-            id: Date.now(), 
-            data: document.getElementById('f-data').value, 
-            tecnico: tecnico || "Não informado",
-            tag: tag.toUpperCase(), 
-            time: document.getElementById('f-time').value, 
-            setor: document.getElementById('f-setor').value, 
-            falha: falha, 
-            acao: acao || "Nenhuma ação registrada"
+        const entry = {
+            id: Date.now(),
+            data: document.getElementById('f-data').value || new Date().toISOString().split('T')[0],
+            tecnico: document.getElementById('f-tecnico').value,
+            tag: document.getElementById('f-tag').value.toUpperCase(),
+            time: document.getElementById('f-time').value,
+            setor: document.getElementById('f-setor').value,
+            falha: document.getElementById('f-falha').value,
+            acao: document.getElementById('f-acao').value
         };
-        db.push(e);
+
+        if(!entry.tag || !entry.falha) return alert("Preencha TAG e Ocorrência!");
+        
+        db.push(entry);
         salvarLocal();
-        alert("Manutenção registrada com sucesso!");
-        
-        // Limpa campos
-        document.getElementById('f-tecnico').value = "";
-        document.getElementById('f-tag').value = "";
-        document.getElementById('f-falha').value = "";
-        document.getElementById('f-acao').value = "";
-    }
-
-    function renderPlanos() {
-        const sel = document.getElementById('p-tag');
-        sel.innerHTML = [...new Set(db.map(i => i.tag))].map(t => `<option>${t}</option>`).join('');
-        const lista = document.getElementById('lista-planos');
-        lista.innerHTML = '<h3>Status dos Planos</h3>';
-        const hoje = new Date().toISOString().split('T')[0];
-        Object.keys(planos).forEach(k => {
-            const p = planos[k]; if(p.concluido) return;
-            const atr = p.prazo < hoje;
-            lista.innerHTML += `
-                <div class="card" style="border-left-color:${atr?'var(--danger-red)':'var(--success-green)'}">
-                    <p><strong>TAG:</strong> ${p.tag}</p>
-                    <p>${p.desc}</p>
-                    <p>Prazo: ${p.prazo}</p>
-                    ${atr?`<div class="alert-pendente">FORA DO PRAZO</div>`:''}
-                    <div style="display:flex">
-                        <button onclick="openReproModal('${k}')" class="btn-action" style="background:var(--warning-orange)">Reprogramar</button>
-                        <button onclick="conc('${k}')" class="btn-action" style="background:var(--success-green)">Concluir</button>
-                    </div>
-                </div>`;
-        });
-    }
-
-    function openReproModal(id) {
-        currentReproId = id;
-        const p = planos[id];
-        document.getElementById('repro-tag-info').innerText = `Equipamento: ${p.tag}`;
-        document.getElementById('new-repro-date').value = p.prazo;
-        document.getElementById('modalRepro').style.display = 'flex';
-    }
-
-    function closeReproModal() {
-        document.getElementById('modalRepro').style.display = 'none';
-        currentReproId = null;
-    }
-
-    function confirmarReprogramacao() {
-        const novaData = document.getElementById('new-repro-date').value;
-        if(novaData && currentReproId) {
-            planos[currentReproId].prazo = novaData;
-            salvarLocal();
-            renderPlanos();
-            closeReproModal();
-        } else {
-            alert("Selecione uma data válida!");
-        }
-    }
-
-    function conc(k) { planos[k].concluido = true; salvarLocal(); renderPlanos(); }
-    
-    function salvarPlano() { 
-        const id = Date.now();
-        planos[id] = { tag: document.getElementById('p-tag').value, desc: document.getElementById('p-desc').value, prazo: document.getElementById('p-prazo').value, resp: document.getElementById('p-resp').value, concluido: false }; 
-        salvarLocal(); renderPlanos();
-    }
-
-    function exportarDados() {
-        const dataStr = JSON.stringify({ db, planos });
-        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-        const linkElement = document.createElement('a');
-        linkElement.setAttribute('href', dataUri); linkElement.setAttribute('download', 'backup_fmx_scanner.json'); linkElement.click();
-    }
-
-    function importarDados() {
-        const fileInput = document.getElementById('importFile');
-        if (!fileInput.files.length) { alert("Selecione um arquivo .json primeiro!"); return; }
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const importado = JSON.parse(e.target.result);
-                if (importado.db && importado.planos) {
-                    if (confirm("Isso irá substituir seus dados atuais. Continuar?")) {
-                        db = importado.db; planos = importado.planos; salvarLocal(); location.reload(); 
-                    }
-                }
-            } catch (err) { alert("Erro ao ler o arquivo JSON."); }
-        };
-        reader.readAsText(fileInput.files[0]);
-    }
-
-    function renderAnalise() {
-        const div = document.getElementById('analise-lista');
-        div.innerHTML = '<h3>Análise de Reincidência</h3>';
-        const counts = {};
-        db.forEach(item => { const key = `${item.tag} - ${item.falha}`; counts[key] = (counts[key] || 0) + 1; });
-        for (let key in counts) {
-            let n = counts[key];
-            let b = n >= 8 ? 'critical' : n >= 5 ? 'high' : n >= 2 ? 'medium' : 'low';
-            div.innerHTML += `<div class="card"><span class="badge ${b}">${n >= 8 ? 'CRÍTICA' : n >= 5 ? 'ALTA' : n >= 2 ? 'MÉDIA' : 'BAIXA'} (${n}x)</span><p><strong>EQUIPAMENTO:</strong> ${key.split(' - ')[0]}</p><p><strong>FALHA:</strong> ${key.split(' - ')[1]}</p></div>`;
-        }
-    }
-
-    function renderGrafico() {
-        const ctx = document.getElementById('graficoSetores').getContext('2d');
-        const setores = ["Mecânica", "Hidráulica", "Pneumática", "Elétrica", "Robótica", "Processo", "Engenharia", "Operacional"];
-        const totais = setores.map(s => db.filter(i => i.setor === s).length);
-        const totalGeral = totais.reduce((a, b) => a + b, 0);
-        const percentuais = totais.map(v => totalGeral > 0 ? ((v / totalGeral) * 100).toFixed(1) : 0);
-        if(chartFmx) chartFmx.destroy();
-        chartFmx = new Chart(ctx, { type: 'bar', data: { labels: setores, datasets: [{ label: '% de Falhas', data: percentuais, backgroundColor: '#0056b3' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100 } } } });
-    }
-
-    function renderHistorico() {
-        const div = document.getElementById('historico-concluidos'); div.innerHTML = '<h3>Ações Concluídas</h3>';
-        Object.values(planos).filter(p => p.concluido).reverse().forEach(p => {
-            div.innerHTML += `<div class="card" style="border-left-color:var(--success-green);background:#f9fff9;"><h4>✓ COMPROVANTE DE EXECUÇÃO</h4><p><strong>TAG:</strong> ${p.tag} | <strong>Resp:</strong> ${p.resp}</p><hr><p class="txt-blue">OCORRÊNCIA: Intervenção em ${p.tag}</p><p class="txt-green">AÇÃO REALIZADA: ${p.desc}</p></div>`;
-        });
+        alert("Registrado!");
+        location.reload(); 
     }
 
     function renderReport() {
-        const div = document.getElementById('report-lista'); 
-        const s = document.getElementById('search-report').value.toUpperCase(); 
+        const div = document.getElementById('report-lista');
+        const search = document.getElementById('search-report').value.toUpperCase();
         div.innerHTML = '';
-        
+
         ["Time 1", "Time 2", "Time 3"].forEach(t => {
-            const l = db.filter(i => i.time === t && (
-                i.tag.includes(s) || 
-                i.data.includes(s) || 
-                (i.tecnico && i.tecnico.toUpperCase().includes(s))
-            ));
-            
-            if(l.length > 0) {
-                div.innerHTML += `<div class="time-header">👥 ${t}</div>`;
-                l.reverse().forEach(i => {
+            const filtrados = db.filter(i => i.time === t && (i.tag.includes(search) || i.falha.includes(search)));
+            if(filtrados.length > 0) {
+                div.innerHTML += `<div class="time-header">${t}</div>`;
+                filtrados.reverse().forEach(i => {
                     div.innerHTML += `
                         <div class="card">
                             <button class="btn-delete" onclick="excluirRegistro(${i.id})">🗑</button>
-                            <div class="txt-tecnico">🛠 Técnico: ${i.tecnico || "Não informado"}</div>
-                            <div style="margin-bottom: 10px;">
-                                <span class="tag-info">TAG: ${i.tag}</span> 
-                                <span style="font-size:12px; color:#666; margin-left:10px;">📅 ${i.data}</span>
-                                <span style="font-size:12px; color:#666; margin-left:10px;">📍 ${i.setor}</span>
-                            </div>
-                            <hr>
-                            <div style="margin-bottom:5px; font-size:12px; font-weight:bold; color:#888;">OCORRÊNCIA:</div>
-                            <span class="txt-blue">${i.falha}</span>
-                            
-                            <div style="margin-top:15px; margin-bottom:5px; font-size:12px; font-weight:bold; color:#888;">AÇÃO TOMADA:</div>
-                            <span class="txt-green">${i.acao}</span>
+                            <strong>${i.tecnico}</strong> | <span class="tag-info">${i.tag}</span><br>
+                            <small>${i.data} - ${i.setor}</small><hr>
+                            <div class="txt-blue">${i.falha}</div>
+                            <div class="txt-green">${i.acao}</div>
                         </div>`;
                 });
             }
         });
     }
 
-    function excluirRegistro(id) { if(confirm("Deseja excluir este registro permanentemente?")) { db = db.filter(item => item.id !== id); salvarLocal(); renderReport(); } }
-    
-  
+    function renderAnalise() {
+        const div = document.getElementById('analise-lista');
+        div.innerHTML = '<h3>Reincidências</h3>';
+        const counts = {};
+        db.forEach(i => { const k = i.tag; counts[k] = (counts[k] || 0) + 1; });
+        
+        Object.keys(counts).forEach(tag => {
+            const n = counts[tag];
+            const nivel = n >= 8 ? 'critical' : n >= 5 ? 'high' : n >= 2 ? 'medium' : 'low';
+            div.innerHTML += `<div class="card"><span class="badge ${nivel}">Frequência: ${n}</span><br>TAG: <strong>${tag}</strong></div>`;
+        });
+    }
+
+    function renderGrafico() {
+        const ctx = document.getElementById('graficoSetores').getContext('2d');
+        const setores = ["Mecânica", "Hidráulica", "Pneumática", "Elétrica", "Robótica", "Processo", "Operacional"];
+        const dados = setores.map(s => db.filter(i => i.setor === s).length);
+        
+        if(chartFmx) chartFmx.destroy();
+        chartFmx = new Chart(ctx, {
+            type: 'bar',
+            data: { labels: setores, datasets: [{ label: 'Qtd Falhas', data: dados, backgroundColor: '#0056b3' }] },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+
+    function excluirRegistro(id) {
+        if(confirm("Excluir definitivamente?")) {
+            db = db.filter(i => i.id !== id);
+            salvarLocal();
+            renderReport();
+        }
+    }
+
+    function atualizarDatalist() {
+        const list = document.getElementById('lista-tags');
+        const tags = [...new Set(db.map(i => i.tag))];
+        list.innerHTML = tags.map(t => `<option value="${t}">`).join('');
+        document.getElementById('p-tag').innerHTML = tags.map(t => `<option>${t}</option>`).join('');
+    }
+
+    function exportarDados() {
+        const blob = new Blob([JSON.stringify({db, planos})], {type: "application/json"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = "backup_fmx.json"; a.click();
+    }
+
+    // Inicializa a data de hoje no input
+    document.getElementById('f-data').value = new Date().toISOString().split('T')[0];
+    atualizarDatalist();
+
+</script>
+</body>
+</html>
