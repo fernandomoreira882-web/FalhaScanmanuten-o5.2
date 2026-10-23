@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src blob:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>FMX — Teste de seleção de foto</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eef3f9;color:#162d46;font:17px/1.5 system-ui,sans-serif}main{max-width:620px;margin:24px auto;padding:24px;background:white;border-radius:18px}h1{font-size:25px;margin:0 0 12px}p{margin:12px 0}.badge{color:#146444;font-weight:700}label,button{display:block;width:100%;padding:15px;margin:14px 0;border:0;border-radius:10px;font:inherit;font-weight:700;text-align:center;cursor:pointer}label{background:#075abb;color:white}button{background:#e6edf5;color:#163c65}input{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0}input:focus-visible+label{outline:3px solid #ff9b00;outline-offset:3px}img{display:block;width:100%;max-height:440px;object-fit:contain;border-radius:10px;background:#eef3f9}img[hidden]{display:none}#status{padding:14px;background:#edf4ff;border-radius:10px;overflow-wrap:anywhere}small{display:block;color:#4c6279} @media(max-width:660px){main{margin:12px;padding:20px}}
+</style>
+</head>
+<body><main>
+<p class="badge">FMX · Teste local · 1 foto</p>
+<h1>Escolher uma foto</h1>
+<p>Toque no botão, escolha uma imagem do celular e confira a prévia.</p>
+<input id="foto" type="file" accept="image/*" aria-label="Selecionar uma foto">
+<label for="foto">Escolher foto</label>
+<p id="status" role="status" aria-live="polite">Aguardando a seleção de uma foto.</p>
+<img id="previa" alt="Prévia da foto selecionada" hidden>
+<button id="limpar" type="button">Limpar e testar novamente</button>
+<p>A foto fica somente nesta página enquanto ela estiver aberta. Não há envio ao Firebase, gravação de ocorrência ou alteração do estoque.</p>
+<small>Para validar o aplicativo, abra esta página dentro do WebViewer do APK. O funcionamento no navegador não confirma o funcionamento no APK.</small>
+</main><script>
+'use strict';
+(() => {
+ const input=document.getElementById('foto');
+ const preview=document.getElementById('previa');
+ const status=document.getElementById('status');
+ let url=null,sequence=0;
+ function release(){sequence++;preview.onload=null;preview.onerror=null;preview.hidden=true;preview.removeAttribute('src');if(url){URL.revokeObjectURL(url);url=null;}}
+ input.addEventListener('click',()=>{input.value='';status.textContent='Se o seletor abrir, escolha uma foto. Se nada abrir no APK, informe esse resultado.';});
+ input.addEventListener('cancel',()=>{status.textContent=preview.hidden?'Seleção cancelada. Nenhuma foto foi escolhida.':'Seleção cancelada. A prévia anterior foi mantida.';});
+ input.addEventListener('change',()=>{
+  const file=input.files&&input.files[0];if(!file)return;
+  release();const current=sequence;
+  if(file.type&&!file.type.startsWith('image/')){status.textContent='Escolha um arquivo de imagem.';return;}
+  if(file.size>25*1024*1024){status.textContent='Para este teste, escolha uma foto de até 25 MB.';return;}
+  status.textContent='Imagem recebida. Preparando a prévia…';
+  preview.onload=()=>{if(current!==sequence)return;preview.hidden=false;status.textContent='Seleção e prévia concluídas: '+file.name+' · '+(file.size/1024).toFixed(0)+' KB · '+preview.naturalWidth+' × '+preview.naturalHeight+' pixels. Nenhum envio realizado.';};
+  preview.onerror=()=>{if(current!==sequence)return;release();status.textContent='O arquivo foi selecionado, mas não foi possível mostrar a imagem. Tente uma foto JPEG ou PNG.';};
+  try{url=URL.createObjectURL(file);preview.src=url;}catch(error){release();status.textContent='Não foi possível preparar a prévia neste ambiente.';}
+ });
+ document.getElementById('limpar').addEventListener('click',()=>{release();input.value='';status.textContent='Aguardando a seleção de uma foto.';});
+ window.addEventListener('pagehide',()=>{release();input.value='';status.textContent='Aguardando a seleção de uma foto.';});
+})();
+</script></body></html>
